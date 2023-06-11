@@ -9,8 +9,10 @@ from django.contrib.auth.decorators import login_required
 @login_required(login_url='login')
 def list_task(request):
     tasks = request.user.task_set.all()
+    count = tasks.count()
     context = {
-        'tasks': tasks
+        'tasks': tasks,
+        'count': count
     }
     return render(request, 'tasks/home.html', context)
 
@@ -65,3 +67,11 @@ def signup(request):
         'form': form
     }
     return render(request, 'tasks/signup.html', context)
+
+def search(request):
+    query = request.GET.get('search-area')
+    tasks = Task.objects.filter(title__icontains = query)
+    context = {
+        'tasks': tasks
+    }    
+    return render(request, 'tasks/home.html', context)
