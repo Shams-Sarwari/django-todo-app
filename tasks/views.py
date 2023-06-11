@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from .models import Task
 from .forms import CreateTaskForm
+from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 # Create your views here.
@@ -52,4 +53,15 @@ def delete_task(request, pk):
         'task': task
     }
     return render(request, 'tasks/delete_task.html', context)
-    
+
+def signup(request):
+    form = UserCreationForm
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('login')
+    context = {
+        'form': form
+    }
+    return render(request, 'tasks/signup.html', context)
